@@ -1,5 +1,32 @@
-// Sign-ins that ask one value before they start. app.js imports this only
-// when one is asked for (signAsk), so it weighs nothing on the core.
+// Sign-ins that ask one value before they start, or that are done in the
+// subscription's own CLI. app.js imports this only when one is asked for
+// (signAsk), so it weighs nothing on the core.
+
+// A subscription whose CLI signs in, which magpie only reads (Muse Code):
+// the command to run, and Check again once it is done
+window.cliSignSheet = function (sub) {
+  const box = el("div", "signing");
+  const tt = el("span", "tt");
+  tt.append(el("span", "n", t("Sign in to {name} in its CLI", { name: sub.name })),
+    el("span", "s", signing.notYet ? t("{name} isn't signed in yet. Run this in a terminal, then check again.", { name: sub.name })
+      : t("Run this in a terminal, then check again. magpie uses the account it signs in to.")));
+  const cmd = el("span", "devcode");
+  cmd.append(el("code", "", sub.cli), copyBtn(sub.cli, t("Command")));
+  tt.append(cmd);
+  box.append(tt);
+  const close = el("button", "text", t("Cancel"));
+  close.onclick = cancelSignIn;
+  const again = el("button", "text primary", t("Check again"));
+  again.onclick = async () => {
+    again.disabled = true;
+    try { await loadProviders(); } catch (e) { statusErr(e); }
+    if (signing?.agent !== sub.agent) return;
+    signing = hasLogins(sub.agent) ? null : { ...signing, notYet: true };
+    renderProviders();
+  };
+  box.append(close, again);
+  return box;
+};
 
 // Copilot's enterprise on GHE.com: its host, asked before its sign-in starts
 window.copilotGHESheet = function () {

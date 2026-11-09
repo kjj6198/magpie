@@ -360,6 +360,12 @@ func ownMark(agent string) string {
 			return ""
 		}
 		secret = c.dbKey + c.idePath + "\x00" + firstNonEmpty(c.refresh, c.access)
+	case MuseID:
+		c, ok := museSignIn()
+		if !ok {
+			return ""
+		}
+		secret = c.Key
 	default:
 		return ""
 	}
@@ -425,7 +431,7 @@ func addSideLogin(l savedLogin, ownUser string, dup func(savedLogin)) (err error
 // agent's own store as Claude Code's and Codex's are.
 func sideAgent(agent string) bool {
 	switch agent {
-	case "grok", "copilot", "zcode", "kiro", "devin", "workbuddy", WorkBuddyAIID, CommandCodePlanID, "gemini", "antigravity", "qoder", QoderCNID, "zed", "factory", MiMoID, ChatGPTAPIID:
+	case "grok", "copilot", "zcode", "kiro", "devin", "workbuddy", WorkBuddyAIID, CommandCodePlanID, "gemini", "antigravity", "qoder", QoderCNID, "zed", "factory", MiMoID, ChatGPTAPIID, MuseID:
 		return true
 	}
 	return false

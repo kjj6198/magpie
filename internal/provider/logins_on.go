@@ -39,6 +39,8 @@ func SetLoginOn(agent, user string, on bool) error {
 		return setCopilotLoginOn(user, on)
 	case ChatGPTAPIID:
 		return setSIWCLoginOn(user, on)
+	case MuseID:
+		return setMuseLoginOn(user, on)
 	case "gemini", "antigravity":
 		return setGoogleLoginOn(agent, user, on)
 	}

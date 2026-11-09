@@ -1039,6 +1039,8 @@ func loginsNow(agent string) []Login {
 		return copilotLoginList()
 	case ChatGPTAPIID:
 		return siwcLoginList()
+	case MuseID:
+		return museLoginList()
 	case "gemini", "antigravity":
 		return googleLoginList(agent)
 	case "":
@@ -1062,7 +1064,7 @@ func loginsNow(agent string) []Login {
 			{"grok", nil}, {"copilot", copilotLoginList}, {"zcode", nil}, {"kiro", nil},
 			{"devin", nil}, {"workbuddy", nil}, {WorkBuddyAIID, nil}, {CommandCodePlanID, nil},
 			{"qoder", nil}, {QoderCNID, nil}, {"zed", nil}, {"factory", nil},
-			{MiMoID, nil}, {ChatGPTAPIID, siwcLoginList}, {"gemini", func() []Login { return googleLoginList("gemini") }},
+			{MiMoID, nil}, {ChatGPTAPIID, siwcLoginList}, {MuseID, museLoginList}, {"gemini", func() []Login { return googleLoginList("gemini") }},
 			{"antigravity", func() []Login { return googleLoginList("antigravity") }},
 		} {
 			if !PluginServes(b.id) {
@@ -1290,6 +1292,8 @@ func switchLoginBy(agent, user string, byMagpie bool) error {
 		return switchCopilotLogin(user)
 	case ChatGPTAPIID:
 		return switchSIWCLogin(user)
+	case MuseID:
+		return switchMuseLogin(user)
 	case "gemini", "antigravity":
 		return switchGoogleLogin(agent, user)
 	}
@@ -1508,6 +1512,9 @@ func ForgetLogin(agent, user string) error {
 		return forgetCopilotLogin(user)
 	case ChatGPTAPIID:
 		return forgetSIWCLogin(user)
+	case MuseID:
+		// Muse's own sign-in, hidden: its file is Muse's
+		return forgetMuseLogin(user)
 	case "gemini", "antigravity":
 		return forgetGoogleLogin(agent, user)
 	}
