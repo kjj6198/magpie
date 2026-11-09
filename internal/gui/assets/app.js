@@ -12310,6 +12310,10 @@ const SUBS = [
   // Xiaomi MiMo's models (its free offer, MiMo plans), signed in at account.xiaomi.com as MiMo's app is
   { agent: "mimo-app", name: "Xiaomi MiMo", icon: "mimocode", plans: "Free · Starter · Plus · Pro · Ultra", own: true, risk: true,
     riskNote: "Xiaomi serves these models to its own MiMo app; magpie signs requests as the app would, which Xiaomi may treat as third-party use and act on. Use an account you can afford to lose." },
+  // the muse CLI's own sign-in, read: magpie signs in nowhere (cli)
+  { agent: "meta-muse", name: "Muse Code", icon: "meta-color", plans: "Power Usage", own: true, single: true, cli: "muse login", risk: true,
+    hint: "Install Muse Code and run muse login in a terminal; magpie uses the account it signs in to.",
+    riskNote: "Meta's terms keep a Muse Code subscription to Muse Code itself; magpie sends requests with its sign-in as Muse Code would, which Meta may treat as third-party use and act on. Use an account you can afford to lose." },
   // Kiro's own sign-in page (Google, GitHub, Builder ID, Identity Center); kiro-cli's or the IDE's is read too
   { agent: "kiro", name: "Kiro", icon: "kiro-color", plans: "Free · Pro · Pro+ · Power", own: true },
   // Google's sign-ins; Gemini CLI's own account is read too
@@ -12427,6 +12431,7 @@ async function startSignIn(agent, risky, site, o = {}) {
     renderProviders();
     return;
   }
+  if (subOf(agent)?.cli) return signAsk({ agent, state: "cli" });
   if (agent === "codex" && !site && remotePage) site = "device";
   // one on more than one site says which first
   if (subOf(agent)?.sites && !site) {
@@ -12850,7 +12855,7 @@ function copilotHostSwitch(sub) {
 }
 
 // signAsk: a sign-in that asks one value first (Copilot's GHE.com host, a
-// Claude setup-token); its sheet is in signsheets.js, loaded when asked for
+// Claude setup-token) or is done in a CLI; its sheet is in signsheets.js
 async function signAsk(flow) {
   try { await import("./signsheets.js"); } catch (err) { return statusErr(err); }
   stopSignIn();
@@ -12939,6 +12944,7 @@ function renderSigning(sub) {
     }
     return box;
   }
+  if (signing.state === "cli") return window.cliSignSheet(sub);
   if (signing.state === "ghe") return window.copilotGHESheet();
   if (signing.state === "token") return window.claudeTokenSheet();
   if (signing.state === "import" || signing.state === "importing" || signing.state === "imported") return renderLoginImport(sub);

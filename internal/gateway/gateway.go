@@ -5978,6 +5978,7 @@ func (s *Server) forwardOnce(ctx context.Context, p provider.Provider, to provid
 	}
 	// what a Codex account's reply says it has used, for its cap (#1295)
 	heardCodexLimits(p, res)
+	heardMuseLimits(p, res)
 	noteSignIn(ctx, p.Account, req, res)
 	return res, nil
 }

@@ -340,6 +340,8 @@ func builtinLogins(agent string) (logins []Login, ok bool) {
 		logins = copilotLoginList()
 	case ChatGPTAPIID:
 		logins = siwcLoginList()
+	case MuseID:
+		logins = museLoginList()
 	case "gemini", "antigravity":
 		logins = googleLoginList(agent)
 	default:
@@ -377,6 +379,9 @@ func loginQuota(ctx context.Context, l Login) SubscriptionQuota {
 		// Codex's own sign-in ("Codex is signed out; run codex login", or
 		// another account's allowance under its name).
 		return SubscriptionQuota{Provider: l.Agent, Plan: l.Plan, Windows: []QuotaWindow{}, Error: siwcNoUsage, SeeAt: SIWCUsageURL}
+	}
+	if l.Agent == MuseID {
+		return museQuota(ctx, l)
 	}
 	if l.Agent == "copilot" {
 		for _, c := range copilotLogins(copilotConfigDir()) {

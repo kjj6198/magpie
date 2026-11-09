@@ -486,7 +486,7 @@ func fetchSubscriptionUsage(ctx context.Context) []SubscriptionQuota {
 		for _, p := range load().Providers {
 			hidden[p.ID] = hidden[p.ID] || p.ID != r.provider
 		}
-		for _, id := range []string{"claude", "cursor", "grok", "codex", "copilot", "kiro", "zcode", wbCN.id, wbAI.id, CommandCodePlanID, "qoder", QoderCNID, "zed", "devin", "factory", MiMoID, ChatGPTAPIID, "gemini", "antigravity"} {
+		for _, id := range []string{"claude", "cursor", "grok", "codex", "copilot", "kiro", "zcode", wbCN.id, wbAI.id, CommandCodePlanID, "qoder", QoderCNID, "zed", "devin", "factory", MiMoID, ChatGPTAPIID, MuseID, "gemini", "antigravity"} {
 			hidden[id] = hidden[id] || id != r.provider
 		}
 		for _, pp := range plugin.Cached() {
@@ -551,6 +551,9 @@ func fetchSubscriptionUsage(ctx context.Context) []SubscriptionQuota {
 	}
 	for _, id := range []string{"kiro", "zcode", wbCN.id, wbAI.id, CommandCodePlanID, "qoder", QoderCNID, "zed", "devin", "factory", MiMoID} {
 		moved(id)
+	}
+	if ls := museLoginList(); len(ls) > 0 && !hidden[MuseID] {
+		fetches = append(fetches, perLogin(via(MuseID), ls, accountCard(MuseID))...)
 	}
 	for _, agent := range []string{"gemini", "antigravity"} {
 		if hidden[agent] {

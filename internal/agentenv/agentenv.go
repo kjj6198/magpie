@@ -34,6 +34,8 @@ var Vars = []string{
 	"CLAUDE_CODE_TMPDIR",
 	// Zed, or a fork of it that keeps its settings (ZedG)
 	"MAGPIE_ZED_BIN", "MAGPIE_ZED_CONFIG_DIR", "MAGPIE_ZED_PROCESS_NAMES",
+	// Muse Code's sign-in file, else muse/auth.json in XDG_CONFIG_HOME
+	"MUSE_AUTH_PATH",
 	// Codex's state database, when it is kept apart from CODEX_HOME
 	"CODEX_SQLITE_HOME",
 	// Gemini CLI's session/config home

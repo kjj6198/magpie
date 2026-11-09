@@ -488,6 +488,9 @@ func accountLabel(p provider.Provider) (name, icon string) {
 	} else if a.Agent == provider.ChatGPTAPIID {
 		// a ChatGPT plan through OpenAI's API, not Codex's backend
 		name, icon = "ChatGPT API", "openai"
+	} else if a.Agent == provider.MuseID {
+		// Meta's plan through the muse CLI's sign-in, not the Muse agent
+		name, icon = "Muse Code", "meta-color"
 	} else if ag, err := agentNamed(a.Agent); err == nil {
 		name, icon = ag.Name, ag.Icon
 	} else if a.Agent == "cursor" {
